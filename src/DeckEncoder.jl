@@ -1,6 +1,6 @@
 module DeckEncoder # LoRDeckCodes
 
-using ..LoRDeckCodes: Base32, VarintTranslator, Deck, Card
+using ..LoRDeckCodes: Base32, VarintTranslator, Deck, Card, ArgumentException
 
 const DECK_CODE_FORMAT = 1
 const MAX_KNOWN_VERSION = 1
@@ -120,7 +120,23 @@ function encodeNOfs(stream::IOBuffer, nOfs::Vector{Card})
     end
 end
 
+function isvalid(card::Card)::Bool
+    length(card.code) != CARD_CODE_LENGTH && return false
+    try
+        parse(Int, card.code[1:2]) # set
+        parse(Int, card.code[5:7]) # number
+    catch err
+        return false
+    end
+    !haskey(FactionCodeToIntIdentifier, card.faction) && return false
+    card.count < 1 && return false
+    true
+end
+
 function isvalid(cards::Vector{Card})::Bool
+    for card in cards
+        !isvalid(card) && return false
+    end
     true
 end
 

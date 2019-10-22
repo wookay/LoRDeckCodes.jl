@@ -12,6 +12,10 @@ struct Card
     code::String
     count::Int
 
+    function Card(code::String, count::Int)
+        new(code, count)
+    end
+
     function Card(set::Int, faction::String, number::Int, count::Int)
         new(string(lpad(set, 2, '0'), faction, lpad(number, 3, '0')), count)
     end
@@ -46,6 +50,9 @@ struct Deck
     cards::Vector{Card}
     version::UInt8
 end
+
+Base.isless(a::Card, b::Card) = isless((a.code, a.count), (b.code, b.count))
+Base.:(==)(a::Deck, b::Deck) = length(a.cards) == length(b.cards) && sort(a.cards) == sort(b.cards) && a.version == b.version
 
 struct ArgumentException <: Exception
     msg::String
