@@ -4,8 +4,24 @@
 |:-----------------------------------------:|:----------------------------------------------------------------:|
 |  [![][docs-latest-img]][docs-latest-url]  |  [![][travis-img]][travis-url]  [![][codecov-img]][codecov-url]  |
 
-A Julia implementation for the Legends of Runeterra deck encoder/decoder, [originally written in C# by Riot Games](https://github.com/RiotGames/LoRDeckCodes).
+It's a [Julia](https://julialang.org/) package to encode, decode the deck used for [Legends of Runeterra](https://playruneterra.com).
+the original repository is [RiotGames/LoRDeckCodes](https://github.com/RiotGames/LoRDeckCodes).
 
+```julia
+julia> using LoRDeckCodes
+
+julia> deck = Deck("CEBAIAIFAEHSQNQIAEAQGDAUDAQSOKJUAIAQCBI5AEAQCFYA")
+Deck(Card[Card("01SI001", 3), Card("01SI015", 3), Card("01SI040", 3), Card("01SI054", 3), Card("01FR003", 3), Card("01FR012", 3), Card("01FR020", 3), Card("01FR024", 3), Card("01FR033", 3), Card("01FR039", 3), Card("01FR041", 3), Card("01FR052", 3), Card("01SI029", 2), Card("01FR023", 2)], 0x01)
+
+julia> DeckEncoder.encode_deck(deck)
+"CEBAIAIFAEHSQNQIAEAQGDAUDAQSOKJUAIAQCBI5AEAQCFYA"
+```
+
+### Installation
+ * `]` key on Julia REPL.
+```julia
+(v1.1) pkg> add https://github.com/wookay/LoRDeckCodes.jl.git
+```
 
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg

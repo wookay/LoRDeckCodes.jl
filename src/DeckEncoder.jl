@@ -1,3 +1,6 @@
+"""
+    DeckEncoder
+"""
 module DeckEncoder # LoRDeckCodes
 
 using ..LoRDeckCodes: Base32, VarintTranslator, Deck, Card
@@ -24,10 +27,16 @@ const IntIdentifierToFactionCode = Dict{Int,String}(
     5 => "SI",
 )
 
+"""
+    encode_deck(cards::Vector{Card})::String
+"""
 function encode_deck(cards::Vector{Card})::String
     encode_deck(cards, MAX_KNOWN_VERSION)
 end
 
+"""
+    encode_deck(deck::Deck)::String
+"""
 function encode_deck(deck::Deck)::String
     encode_deck(deck.cards, deck.version)
 end
@@ -148,6 +157,9 @@ function decode_deck(deckcode::String)::Deck
     Deck(cards, version)
 end
 
+"""
+    Deck(deckcode::String)::Deck
+"""
 function Deck(deckcode::String)::Deck
     decode_deck(deckcode)
 end
