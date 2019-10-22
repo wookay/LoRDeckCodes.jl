@@ -1,6 +1,3 @@
-"""
-    DeckEncoder
-"""
 module DeckEncoder # LoRDeckCodes
 
 using ..LoRDeckCodes: Base32, VarintTranslator, Deck, Card

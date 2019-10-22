@@ -5,7 +5,10 @@ makedocs(
     build = joinpath(@__DIR__, "local" in ARGS ? "build_local" : "build"),
     modules = [LoRDeckCodes],
     clean = false,
-    format = Documenter.HTML(prettyurls = !("local" in ARGS)),
+    format = Documenter.HTML(
+        prettyurls = !("local" in ARGS),
+        assets = ["assets/custom.css"],
+    ),
     sitename = "LoRDeckCodes.jl",
     authors = "WooKyoung Noh",
     pages = Any[

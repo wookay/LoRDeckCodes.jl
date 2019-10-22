@@ -1,7 +1,12 @@
 # module LoRDeckCodes
 
 """
-    Card
+```julia
+struct Card
+    code::String
+    count::Int
+end
+```
 """
 struct Card
     code::String
@@ -30,7 +35,12 @@ function Base.getproperty(card::Card, prop::Symbol)
 end
 
 """
-    Deck
+```julia
+struct Deck
+    cards::Vector{Card}
+    version::UInt8
+end
+```
 """
 struct Deck
     cards::Vector{Card}
