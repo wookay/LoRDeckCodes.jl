@@ -124,5 +124,14 @@ using LoRDeckCodes: ArgumentException
 
 # BadCount
 @test !DeckEncoder.isvalid(CardCodeAndCount("01DE002", 0))
+@test !DeckEncoder.isvalid(CardCodeAndCount("01DE002", -1))
+
+# GarbageDecoding
+badEncodingNotBase32 = "I'm no card code!"
+badEncoding32 = "ABCDEFG"
+badEncodingEmpty = ""
+@test_throws ArgumentException Deck(badEncodingNotBase32)
+@test_throws ArgumentException Deck(badEncoding32)
+@test_throws ArgumentException Deck(badEncodingEmpty)
 
 end # module test_lordeckcodes_unittest1

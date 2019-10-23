@@ -141,7 +141,14 @@ function isvalid(cards::Vector{CardCodeAndCount})::Bool
 end
 
 function decode_deck(deckcode::String)::Deck
-    bytes = Base32.decode(deckcode)
+    InvalidDeckCode = ArgumentException("Invalid deck code")
+    isempty(deckcode) && throw(InvalidDeckCode)
+    bytes = UInt8[]
+    try
+        bytes = Base32.decode(deckcode)
+    catch
+        throw(InvalidDeckCode)
+    end
     stream = IOBuffer(bytes)
     (firstbyte,) = read(stream, 1)
     format = firstbyte >> 4
