@@ -8,14 +8,8 @@ end
 
 function decode(data::String)::Vector{UInt8}
     len = length(data)
-    if len < 16
-        n = rem(16, len)
-    elseif len < 128
-        n = len % 8
-    else
-        n = len ÷ 128
-    end
-    if !iszero(n)
+    if !iszero(len % 8)
+        n = 8 - len % 8
         data = string(data, repeat('=', n))
     end
     transcode(Base32Decoder(), data)

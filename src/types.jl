@@ -51,8 +51,10 @@ struct Deck
     version::UInt8
 end
 
-Base.isless(a::Card, b::Card) = isless((a.code, a.count), (b.code, b.count))
-Base.:(==)(a::Deck, b::Deck) = length(a.cards) == length(b.cards) && sort(a.cards) == sort(b.cards) && a.version == b.version
+function Base.:(==)(a::Deck, b::Deck)
+    by = x -> (x.code, x.count)
+    length(a.cards) == length(b.cards) && sort(a.cards, by = by) == sort(b.cards, by = by) && a.version == b.version
+end
 
 struct ArgumentException <: Exception
     msg::String
