@@ -5,5 +5,5 @@ Deck(deckcode::String)
 DeckEncoder.encode_deck
 
 Deck
-Card
+CardCodeAndCount
 ```

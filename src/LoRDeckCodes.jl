@@ -1,6 +1,6 @@
 module LoRDeckCodes
 
-export Deck, Card, DeckEncoder
+export Deck, CardCodeAndCount, DeckEncoder
 
 include("types.jl")
 include("VarintTranslator.jl")

@@ -11,7 +11,7 @@ the original repository is [RiotGames/LoRDeckCodes](https://github.com/RiotGames
 julia> using LoRDeckCodes
 
 julia> deck = Deck("CEBAIAIFAEHSQNQIAEAQGDAUDAQSOKJUAIAQCBI5AEAQCFYA")
-Deck(Card[Card("01SI001", 3), Card("01SI015", 3), Card("01SI040", 3), Card("01SI054", 3), Card("01FR003", 3), Card("01FR012", 3), Card("01FR020", 3), Card("01FR024", 3), Card("01FR033", 3), Card("01FR039", 3), Card("01FR041", 3), Card("01FR052", 3), Card("01SI029", 2), Card("01FR023", 2)], 0x01)
+Deck(CardCodeAndCount[CardCodeAndCount("01SI001", 3), CardCodeAndCount("01SI015", 3), CardCodeAndCount("01SI040", 3), CardCodeAndCount("01SI054", 3), CardCodeAndCount("01FR003", 3), CardCodeAndCount("01FR012", 3), CardCodeAndCount("01FR020", 3), CardCodeAndCount("01FR024", 3), CardCodeAndCount("01FR033", 3), CardCodeAndCount("01FR039", 3), CardCodeAndCount("01FR041", 3), CardCodeAndCount("01FR052", 3), CardCodeAndCount("01SI029", 2), CardCodeAndCount("01FR023", 2)], 0x01)
 
 julia> DeckEncoder.encode_deck(deck)
 "CEBAIAIFAEHSQNQIAEAQGDAUDAQSOKJUAIAQCBI5AEAQCFYA"

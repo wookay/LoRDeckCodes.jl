@@ -1,6 +1,6 @@
 module DeckEncoder # LoRDeckCodes
 
-using ..LoRDeckCodes: Base32, VarintTranslator, Deck, Card, ArgumentException
+using ..LoRDeckCodes: Base32, VarintTranslator, Deck, CardCodeAndCount, ArgumentException
 
 const DECK_CODE_FORMAT = 1
 const MAX_KNOWN_VERSION = 1
@@ -25,9 +25,9 @@ const IntIdentifierToFactionCode = Dict{Int,String}(
 )
 
 """
-    encode_deck(cards::Vector{Card})::String
+    encode_deck(cards::Vector{CardCodeAndCount})::String
 """
-function encode_deck(cards::Vector{Card})::String
+function encode_deck(cards::Vector{CardCodeAndCount})::String
     encode_deck(cards, MAX_KNOWN_VERSION)
 end
 
@@ -38,15 +38,15 @@ function encode_deck(deck::Deck)::String
     encode_deck(deck.cards, deck.version)
 end
 
-function encode_deck(cards::Vector{Card}, version::UInt8)::String
+function encode_deck(cards::Vector{CardCodeAndCount}, version::UInt8)::String
     stream = IOBuffer()
     !isvalid(cards) && throw(ArgumentException("The provided deck contains invalid card codes."))
     format_and_version = UInt8((DECK_CODE_FORMAT << 4) | version)
     write(stream, format_and_version)
-    of3 = Vector{Card}()
-    of2 = Vector{Card}()
-    of1 = Vector{Card}()
-    ofN = Vector{Card}()
+    of3 = Vector{CardCodeAndCount}()
+    of2 = Vector{CardCodeAndCount}()
+    of1 = Vector{CardCodeAndCount}()
+    ofN = Vector{CardCodeAndCount}()
     for card in cards
         if card.count == 3
             push!(of3, card)
@@ -71,17 +71,17 @@ function encode_deck(cards::Vector{Card}, version::UInt8)::String
     Base32.encode(read(stream))
 end
 
-function getGroupedOfs(list::Vector{Card})::Vector{Vector{Card}}
-    result = Vector{Vector{Card}}()
+function getGroupedOfs(list::Vector{CardCodeAndCount})::Vector{Vector{CardCodeAndCount}}
+    result = Vector{Vector{CardCodeAndCount}}()
     while !isempty(list)
-        currentSet = Vector{Card}()
-        firstCard = first(list)
-        push!(currentSet, firstCard)
+        currentSet = Vector{CardCodeAndCount}()
+        firstCardCodeAndCount = first(list)
+        push!(currentSet, firstCardCodeAndCount)
         deleteat!(list, 1)
         for i in length(list):-1:1
-            currentCard = list[i]
-            if currentCard.set == firstCard.set && currentCard.faction == firstCard.faction
-                push!(currentSet, currentCard)
+            currentCardCodeAndCount = list[i]
+            if currentCardCodeAndCount.set == firstCardCodeAndCount.set && currentCardCodeAndCount.faction == firstCardCodeAndCount.faction
+                push!(currentSet, currentCardCodeAndCount)
                 deleteat!(list, i)
             end
         end
@@ -90,7 +90,7 @@ function getGroupedOfs(list::Vector{Card})::Vector{Vector{Card}}
     result
 end
 
-function sortGroupOf(group::Vector{Vector{Card}})::Vector{Vector{Card}}
+function sortGroupOf(group::Vector{Vector{CardCodeAndCount}})::Vector{Vector{CardCodeAndCount}}
     groupOf = sort(group, by = g -> length(g))
     for i = 1:length(groupOf)
         groupOf[i] = sort(groupOf[i], by = c -> c.code)
@@ -98,20 +98,20 @@ function sortGroupOf(group::Vector{Vector{Card}})::Vector{Vector{Card}}
     groupOf
 end
 
-function encodeGroupOf(stream::IOBuffer, groupOf::Vector{Vector{Card}})
+function encodeGroupOf(stream::IOBuffer, groupOf::Vector{Vector{CardCodeAndCount}})
     write(stream, VarintTranslator.get_varint(length(groupOf)))
     for currentList in groupOf
         write(stream, VarintTranslator.get_varint(length(currentList)))
-        currentCard = first(currentList)
-        write(stream, VarintTranslator.get_varint(currentCard.set))
-        write(stream, VarintTranslator.get_varint(FactionCodeToIntIdentifier[currentCard.faction]))
+        currentCardCodeAndCount = first(currentList)
+        write(stream, VarintTranslator.get_varint(currentCardCodeAndCount.set))
+        write(stream, VarintTranslator.get_varint(FactionCodeToIntIdentifier[currentCardCodeAndCount.faction]))
         for cd in currentList
             write(stream, VarintTranslator.get_varint(cd.number))
         end
     end
 end
 
-function encodeNOfs(stream::IOBuffer, nOfs::Vector{Card})
+function encodeNOfs(stream::IOBuffer, nOfs::Vector{CardCodeAndCount})
     for card in nOfs
         write(stream, VarintTranslator.get_varint(card.count))
         write(stream, VarintTranslator.get_varint(card.set))
@@ -120,7 +120,7 @@ function encodeNOfs(stream::IOBuffer, nOfs::Vector{Card})
     end
 end
 
-function isvalid(card::Card)::Bool
+function isvalid(card::CardCodeAndCount)::Bool
     length(card.code) != CARD_CODE_LENGTH && return false
     try
         parse(Int, card.code[1:2]) # set
@@ -133,7 +133,7 @@ function isvalid(card::Card)::Bool
     true
 end
 
-function isvalid(cards::Vector{Card})::Bool
+function isvalid(cards::Vector{CardCodeAndCount})::Bool
     for card in cards
         !isvalid(card) && return false
     end
@@ -147,7 +147,7 @@ function decode_deck(deckcode::String)::Deck
     format = firstbyte >> 4
     version = firstbyte & 0x0f
     version > MAX_KNOWN_VERSION && throw(ArgumentException("'The provided code requires a higher version of this library; please update."))
-    cards = Vector{Card}()
+    cards = Vector{CardCodeAndCount}()
     for i in 3:-1:1
         numGroupOfs = VarintTranslator.pop_varint(stream)
         for j in 1:numGroupOfs
@@ -156,7 +156,7 @@ function decode_deck(deckcode::String)::Deck
             faction_id = VarintTranslator.pop_varint(stream)
             for k in 1:numOfsInThisGroup
                  number = VarintTranslator.pop_varint(stream)
-                 push!(cards, Card(set, IntIdentifierToFactionCode[faction_id], number, i))
+                 push!(cards, CardCodeAndCount(set, IntIdentifierToFactionCode[faction_id], number, i))
             end
         end
     end
@@ -165,7 +165,7 @@ function decode_deck(deckcode::String)::Deck
         set = VarintTranslator.pop_varint(stream)
         faction_id = VarintTranslator.pop_varint(stream)
         number = VarintTranslator.pop_varint(stream)
-        push!(cards, Card(set, IntIdentifierToFactionCode[faction_id], number, count))
+        push!(cards, CardCodeAndCount(set, IntIdentifierToFactionCode[faction_id], number, count))
     end
     Deck(cards, version)
 end
@@ -177,7 +177,7 @@ function Deck(deckcode::String)::Deck
     decode_deck(deckcode)
 end
 
-function Deck(cards::Vector{Card})::Deck
+function Deck(cards::Vector{CardCodeAndCount})::Deck
     Deck(cards, MAX_KNOWN_VERSION)
 end
 
