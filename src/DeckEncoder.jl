@@ -140,6 +140,21 @@ function isvalid(cards::Vector{CardCodeAndCount})::Bool
     true
 end
 
+function isvalid(; deckcode::Union{Nothing,AbstractString} = nothing, cardcode::Union{Nothing,AbstractString} = nothing)::Bool
+    if deckcode isa AbstractString
+        try
+            decode_deck(deckcode)
+        catch
+            return false
+        end
+        return true
+    elseif cardcode isa AbstractString
+        return isvalid(CardCodeAndCount(cardcode, 1))
+    else
+        return false
+    end
+end
+
 function decode_deck(deckcode::String)::Deck
     InvalidDeckCode = ArgumentException("Invalid deck code")
     isempty(deckcode) && throw(InvalidDeckCode)

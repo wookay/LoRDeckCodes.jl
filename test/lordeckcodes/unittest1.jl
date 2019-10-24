@@ -134,4 +134,12 @@ badEncodingEmpty = ""
 @test_throws ArgumentException Deck(badEncoding32)
 @test_throws ArgumentException Deck(badEncodingEmpty)
 
+@test  DeckEncoder.isvalid(deckcode="CEAAECABAIDASDASDISC2OIIAECBGGY4FAWTINZ3AICACAQXDUPCWBABAQGSOKRM")
+@test !DeckEncoder.isvalid(deckcode=badEncodingNotBase32)
+@test !DeckEncoder.isvalid(deckcode=badEncoding32)
+@test !DeckEncoder.isvalid(deckcode=badEncodingEmpty)
+@test  DeckEncoder.isvalid(cardcode="01DE002")
+@test !DeckEncoder.isvalid(cardcode="01DE02")
+@test !DeckEncoder.isvalid(cardcode="01XX002")
+
 end # module test_lordeckcodes_unittest1
