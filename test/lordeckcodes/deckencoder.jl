@@ -9,4 +9,7 @@ deck = Deck(deckcode)
 @test DeckEncoder.MAX_KNOWN_VERSION == deck.version
 @test DeckEncoder.encode_deck(deck) == deckcode
 
+deck2 = Deck(SubString(deckcode))
+@test deck == deck2
+
 end # module test_lordeckcodes_deckencoder

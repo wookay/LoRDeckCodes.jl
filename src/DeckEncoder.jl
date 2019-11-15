@@ -155,12 +155,12 @@ function isvalid(; deckcode::Union{Nothing,AbstractString} = nothing, cardcode::
     end
 end
 
-function decode_deck(deckcode::String)::Deck
+function decode_deck(deckcode::AbstractString)::Deck
     InvalidDeckCode = ArgumentException("Invalid deck code")
     isempty(deckcode) && throw(InvalidDeckCode)
     bytes = UInt8[]
     try
-        bytes = Base32.decode(deckcode)
+        bytes = Base32.decode(String(deckcode))
     catch
         throw(InvalidDeckCode)
     end
@@ -193,9 +193,9 @@ function decode_deck(deckcode::String)::Deck
 end
 
 """
-    Deck(deckcode::String)::Deck
+    Deck(deckcode::AbstractString)::Deck
 """
-function Deck(deckcode::String)::Deck
+function Deck(deckcode::AbstractString)::Deck
     decode_deck(deckcode)
 end
 
