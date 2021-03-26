@@ -1,8 +1,8 @@
 # LoRDeckCodes.jl
 
-|  **Documentation**                        |  **Build Status**                                                |
-|:-----------------------------------------:|:----------------------------------------------------------------:|
-|  [![][docs-latest-img]][docs-latest-url]  |  [![][travis-img]][travis-url]  [![][codecov-img]][codecov-url]  |
+|  **Documentation**                        |  **Build Status**                                                  |
+|:-----------------------------------------:|:------------------------------------------------------------------:|
+|  [![][docs-latest-img]][docs-latest-url]  |  [![][actions-img]][actions-url]  [![][codecov-img]][codecov-url]  |
 
 It's a [Julia](https://julialang.org/) package to encode, decode the deck used for [Legends of Runeterra](https://playruneterra.com).
 the original repository is [RiotGames/LoRDeckCodes](https://github.com/RiotGames/LoRDeckCodes).
@@ -27,8 +27,8 @@ julia> DeckEncoder.encode_deck(deck)
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
 [docs-latest-url]: https://wookay.github.io/docs/LoRDeckCodes.jl/
 
-[travis-img]: https://api.travis-ci.org/wookay/LoRDeckCodes.jl.svg?branch=master
-[travis-url]: https://travis-ci.org/wookay/LoRDeckCodes.jl
+[actions-img]: https://github.com/wookay/LoRDeckCodes.jl/workflows/CI/badge.svg
+[actions-url]: https://github.com/wookay/LoRDeckCodes.jl/actions
 
 [codecov-img]: https://codecov.io/gh/wookay/LoRDeckCodes.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/wookay/LoRDeckCodes.jl/branch/master
