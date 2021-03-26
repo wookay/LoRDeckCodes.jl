@@ -13,6 +13,9 @@ const FactionCodeToIntIdentifier = Dict{String,Int}(
     "NX" => 3,
     "PZ" => 4,
     "SI" => 5,
+    "BW" => 6,
+    "SH" => 7,
+    "MT" => 9
 )
 
 const IntIdentifierToFactionCode = Dict{Int,String}(
@@ -22,6 +25,9 @@ const IntIdentifierToFactionCode = Dict{Int,String}(
     3 => "NX",
     4 => "PZ",
     5 => "SI",
+    6 => "BW",
+    7 => "SH",
+    9 => "MT"
 )
 
 """
